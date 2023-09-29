@@ -2,14 +2,20 @@ package com.example.lab6_20203651.Controllers;
 
 
 import com.example.lab6_20203651.Entity.SiteEntity;
+import com.example.lab6_20203651.Entity.TechnicianEntity;
 import com.example.lab6_20203651.Repository.LocationRepository;
 import com.example.lab6_20203651.Repository.SitioRepository;
+import com.example.lab6_20203651.Repository.TecnicoRepository;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 public class ControllerPrincipal {
@@ -17,10 +23,13 @@ public class ControllerPrincipal {
     final SitioRepository sitioRepository;
     final LocationRepository locationRepository;
 
+    final TecnicoRepository tecnicoRepository;
 
-    public ControllerPrincipal(SitioRepository sitioRepository, LocationRepository locationRepository) {
+
+    public ControllerPrincipal(SitioRepository sitioRepository, LocationRepository locationRepository, TecnicoRepository tecnicoRepository) {
         this.sitioRepository = sitioRepository;
         this.locationRepository = locationRepository;
+        this.tecnicoRepository = tecnicoRepository;
     }
 
 
@@ -58,4 +67,43 @@ public class ControllerPrincipal {
     public String vistasEstadisticas(){
         return "Estadisticas";
     }
+
+
+    @GetMapping("/Tecnicos")
+    public String vistasTecnicos(Model model){
+        model.addAttribute("listaTecnicos", tecnicoRepository.findAll());
+        return "Tecnicos";
+    }
+
+
+    @GetMapping("/crearTecnico")
+    public String crearTecnico(@ModelAttribute("tecnico")TechnicianEntity tecnico, Model model){
+
+
+        return "NewEditTec";
+    }
+
+     @GetMapping("/editartecnico")
+    public String editarTecnico(@ModelAttribute("tecnico") TechnicianEntity tecnico, Model model, @RequestParam("id") int id){
+
+         Optional<TechnicianEntity> optTecnico = tecnicoRepository.findById(id);
+         if (optTecnico.isPresent()){
+             tecnico =  optTecnico.get();
+             model.addAttribute("tecnico",tecnico);
+         }
+        return "NewEditTec";
+     }
+
+     @PostMapping("/guardarTecnico")
+    public String guardareditartec(@ModelAttribute("tecnico") TechnicianEntity tecnico, RedirectAttributes attr){
+
+        if(tecnico.getTechnicianId() == 0){
+            attr.addFlashAttribute("msg", "Técnico " + tecnico.getFirstName() +" "+ tecnico.getLastName() + " Creado Exitosamente");
+        }else{
+            attr.addFlashAttribute("msg", "Técnico " + tecnico.getFirstName() +" "+ tecnico.getLastName() + " Actualizado Exitosamente");
+        }
+         tecnicoRepository.save(tecnico);
+        return "redirect:/Tecnicos";
+     }
+
 }
