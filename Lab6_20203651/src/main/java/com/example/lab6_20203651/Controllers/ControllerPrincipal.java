@@ -6,9 +6,11 @@ import com.example.lab6_20203651.Entity.TechnicianEntity;
 import com.example.lab6_20203651.Repository.LocationRepository;
 import com.example.lab6_20203651.Repository.SitioRepository;
 import com.example.lab6_20203651.Repository.TecnicoRepository;
+import jakarta.validation.Valid;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,13 +97,16 @@ public class ControllerPrincipal {
      }
 
      @PostMapping("/guardarTecnico")
-    public String guardareditartec(@ModelAttribute("tecnico") TechnicianEntity tecnico, RedirectAttributes attr){
+    public String guardareditartec(@ModelAttribute("tecnico") @Valid TechnicianEntity tecnico, BindingResult bindingResult, RedirectAttributes attr){
+
+
 
         if(tecnico.getTechnicianId() == 0){
             attr.addFlashAttribute("msg", "Técnico " + tecnico.getFirstName() +" "+ tecnico.getLastName() + " Creado Exitosamente");
         }else{
             attr.addFlashAttribute("msg", "Técnico " + tecnico.getFirstName() +" "+ tecnico.getLastName() + " Actualizado Exitosamente");
         }
+        //if(bindingResult.getFieldValue()  )
          tecnicoRepository.save(tecnico);
         return "redirect:/Tecnicos";
      }
