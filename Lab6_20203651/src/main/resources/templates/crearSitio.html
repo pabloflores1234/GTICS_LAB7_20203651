@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sitios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .navbarPablo{
+            background: lawngreen;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Nuevo Sitio</h2>
+    <hr/>
+    <form method="post" th:action="@{/guardarSitio}">
+        <div class="mb-3">
+            <label for="nombre">Nombre</label>
+            <input name="nombre" type="text" class="form-control" id="nombre">
+        </div>
+        <div class="mb-3">
+            <label for="locacion" class="form-label">Puesto</label>
+            <select name="locacion" class="form-select" id="locacion">
+                <option th:each="locacion : ${listaLocation}" th:text="${locacion.country} + ${locacion.city}"
+                        th:value="${locacion.locationId}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="fecha">Fecha de Instalación</label>
+            <input name="fecha" type="text" class="form-control" id="fecha">
+        </div>
+        <div class="mb-3">
+            <label for="latitud">Latitud</label>
+            <input name="latitud" type="text" class="form-control" id="latitud">
+        </div>
+        <div class="mb-3">
+            <label for="longitud">Fecha de Instalación</label>
+            <input name="longitud" type="text" class="form-control" id="longitud">
+        </div>
+
+        <a th:href="@{/Sitios}" class="btn btn-danger">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
+</div>
+
+</body>
+</html>
